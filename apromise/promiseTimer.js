@@ -2,6 +2,7 @@
 
 let count = 0;
 let fps = 5;
+var time = 3;
 
 function rAFPromise() {
     endDate = Date.now() + time * 1000;
@@ -10,15 +11,15 @@ function rAFPromise() {
         const promise = new Promise(requestAnimationFrame);
         promise.then(function callback(timestamp) {
             console.log("Callback run");
-            requestAnimationFrame(asyncRaf);
+            requestAnimationFrame(rAF);
         });
         return promise;
     }, 1000 / fps);
 }
 
-async function asyncRaf() {
-    await rAFPromise();
-    console.log(++count);
+function rAF() {
+    rAFPromise();
+    // console.log(++count);
 }
 
-asyncRaf();
+rAF();
