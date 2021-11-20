@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="style.css" rel="stylesheet" />
+  <script src="timer.js" defer></script>
+  <script src="tabs.js" defer></script>
+  <title>Timer</title>
+</head>
+
+<body>
+  <button id="closeAndSaveTabs">Close and save tabs</button>
+  <button id="openSavedTabs">Open saved tabs</button>
+  <div id="tabList">Test</div>
+  <button id="saveTimes">Save Pomodoro times</button>
+  <button id="startTimer">Start Pomodoro timer</button>
+  <label for="timeWork">Work time in minutes</label>
+  <input id="timeWork" value="25">
+  <label for="timeBreak">Break time in minutes</label>
+  <input id="timeBreak" value="5">
+  <label for="timeRest">Rest time in minutes</label>
+  <input id="timeRest" value="20">
+  <input type="checkbox" id="continueLooping" checked>
+  <label for="continueLooping">Continue looping?</label>
+  <p>Pomodoro timer will time the following: Work Break Work Break Work Break Work Rest, then repeat</p>
+  <p>Pomodoro timer is currently on:</p>
+  <div class="currentTimerIndicator" id="work1">Work</div>
+  <div class="currentTimerIndicator" id="break1">Break</div>
+  <div class="currentTimerIndicator" id="work2">Work</div>
+  <div class="currentTimerIndicator" id="break2">Break</div>
+  <div class="currentTimerIndicator" id="work3">Work</div>
+  <div class="currentTimerIndicator" id="break3">Break</div>
+  <div class="currentTimerIndicator" id="work4">Work</div>
+  <div class="currentTimerIndicator" id="break4">Break</div>
+  <div class="currentTimerIndicator" id="rest">Rest</div>
+  <p id="timerText"></p>
+</body>
+
+</html>

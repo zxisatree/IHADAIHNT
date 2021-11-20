@@ -1,0 +1,9 @@
+.timerTextActive {
+  color: red;
+  font-weight: bold;
+  display: inline;
+}
+
+.currentTimerIndicator {
+  display: inline;
+}
