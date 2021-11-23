@@ -9,7 +9,7 @@ timeBreak = 5,
 timeRest = 20;
 var fps = 5;
 var rafId;
-var timeLeft;
+var timerInSeconds;
 var timerText;
 var timerCycle = ["work1", "break1", "work2", "break2", "work3", "break3", "work4", "break4", "rest"];
 // timerCycleIndex starts at 1 so newCssSelector will select "break1" first
@@ -107,15 +107,15 @@ function backgroundMain(document) {
             var rafCallback = function () {
                 setTimeout(function () {
                     // timeLeft is in milliseconds
-                    timeLeft = endTime - Date.now();
+                    timerInSeconds = endTime - Date.now();
 
-                    var timeLeftSeconds = Math.floor((timeLeft / 1000) % 60);
-                    var timeLeftMinutes = Math.floor((timeLeft / 60000) % 60);
+                    var timeLeftSeconds = Math.floor((timerInSeconds / 1000) % 60);
+                    var timeLeftMinutes = Math.floor((timerInSeconds / 60000) % 60);
 
                     timerText = timeLeftMinutes + ":" + timeLeftSeconds;
 
                     // Recursive call to rAF if there is still time left
-                    if (timeLeft > 0) {
+                    if (timerInSeconds > 0) {
                         rafId = requestAnimationFrame(rafCallback);
                     }
                     // If not, timer has finished. Resolve the promise to move on to the next time period
