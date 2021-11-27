@@ -1,7 +1,10 @@
 ; // Simple pomodoro timer that loops through 4 work+break cycles into rest
 (function(global) {
     // Add the module prefix to the console logs
-    //const console = consoleAddNameAsPrefix('pomodoro', '#f1948a ');
+    const console = consoleAddNameAsPrefix('pomodoro', '#f1948a ');
+    console.log(global.localStorage);
+    // localStorage.setItem("1", "one");
+    // console.log(localStorage.getItem("1"));
 
     // Set the default values for the timer
     let timeWork = 25;
@@ -9,7 +12,6 @@
     let timeRest = 20;
     // ID to cancelAnimationFrame
     let rAFID;
-    let timerFinished = false;
     let timerText;
 
     // Add onclick events to all the buttons

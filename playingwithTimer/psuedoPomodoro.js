@@ -1,7 +1,7 @@
 // Set default values for each period
-let timeWork = 25,
-	timeBreak = 5,
-	timeRest = 20;
+let timeWork = 1,
+	timeBreak = 2,
+	timeRest = 3;
 let timerCycle = ["work1", "break1", "work2", "break2", "work3", "break3", "work4", "break4", "rest"];
 let timerCycleIndex = 0;
 let oldCssSelector, newCssSelector;
@@ -16,7 +16,7 @@ function main() {
 	main();
 }
 
-// Work and break can be put together in one function, because they bot hrun exactly the same 4 times each loop
+// Work and break can be put together in one function, because they both run exactly the same 4 times each loop
 async function timerWorkBreakAwait() {
 	// Wait for work timer to complete
 	await timerWork();
@@ -56,6 +56,7 @@ function timer() {
 }
 
 // Move the active CSS class to the next string in the array
+// Should just loop through all items to remove the active CSS class unless it matches the new one
 function changeCss() {
 	// Move both pointers one to the right in the array
 	oldCssSelector = newCssSelector;

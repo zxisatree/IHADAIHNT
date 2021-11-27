@@ -7,4 +7,4 @@ function consoleAddNameAsPrefix(name, color) {
     newConsole.timeEnd = (label) => console.timeEnd(`[${name}] ${label}`);
   
     return newConsole;
-  }
+}
