@@ -1,9 +1,9 @@
 ; // Code for the timer portion of the web extension
 (function() {
     // Add the module prefix to the console logs for debugging
-    const console = consoleAddNameAsPrefix('tabs', '##33FF8D');
+    const console = consoleAddNameAsPrefix('tabs', '#33FF8D');
 
-    document.addEventListener("load", listTabUrls);
+    window.addEventListener("load", listTabUrls);
     document.querySelector("#closeAndSaveTabs").addEventListener("click", closeAndSaveTabs);
     document.querySelector("#openSavedTabs").addEventListener("click", openSavedTabs);
 
@@ -31,8 +31,7 @@
                 tabUrlList.push(tab.url);
                 tabIdList.push(tab.id);
             }
-            // console.log(tabUrlList);
-            document.querySelector("#tabList").innerHTML = tabUrlList;
+            console.log(`tabUrlList: ${tabUrlList}. tabIdList: ${tabIdList}.`);
             browser.tabs.create({ url: "https://www.google.com" });
             browser.tabs.remove(tabIdList);
             localStorage.setItem("storageTabUrlList", tabUrlList);
@@ -42,13 +41,19 @@
 
     function openSavedTabs() {
         let tabList = localStorage.getItem("storageTabUrlList");
+        if (tabList === null) {
+            console.log("tabList is empty");
+            return;
+        }
+        tabList = tabList.split(',');
         console.log(tabList);
-        // for (removedTabUrl of tabList) {
-        //     let urlObject = { url: removedTabUrl };
-        //     console.log(`removedTabUrl: ${removedTabUrl}, urlObject: ${urlObject}`);
-        //     browser.tabs.create(urlObject);
-        // }
-        localStorage.setItem("storageTabUrlList", []);
+        for (removedTabUrl of tabList) {
+            console.log(`Opening ${removedTabUrl}`);
+            let urlObject = { url: removedTabUrl };
+            console.log(`removedTabUrl: ${removedTabUrl}, urlObject: ${urlObject}`);
+            browser.tabs.create(urlObject);
+        }
+        localStorage.removeItem("storageTabUrlList");
         listTabUrls();
     }
 })();

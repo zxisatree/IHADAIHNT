@@ -1,7 +1,7 @@
 ; // Code for the timer portion of the web extension
 (function() {
     // Add the module prefix to the console logs for debugging
-    const console = consoleAddNameAsPrefix('timer', '#ff8d33 ');
+    const console = consoleAddNameAsPrefix('timer', '#ff8d33');
 
     // Check is key has been set before, set default value if not, always return value
     function setDefaultLocalStorage(key, value) {
