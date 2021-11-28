@@ -1,5 +1,5 @@
 ; // Code for the timer portion of the web extension
-(function(global) {
+(function() {
     // Add the module prefix to the console logs for debugging
     const console = consoleAddNameAsPrefix('timer', '#ff8d33 ');
 
@@ -19,55 +19,74 @@
         "timeWork": 2,
         "timeBreak": 3,
         "timeRest": 4,
-        "endTime": 0
+        "endTime": 0,
+        "timerFunctionIndex": 0
     };
 
     // Assign local variable of window to each default value
     for (const defaultKey in defaultValues) {
-        let setDefaultSuccessfully = setDefaultLocalStorage(defaultKey, defaultValues[defaultKey]);
-        global[defaultKey] = setDefaultSuccessfully;
-        console.log(`localStorage: ${defaultKey}: ${setDefaultSuccessfully}`);
-        console.log(`Variable ${defaultKey}: ${global[defaultKey]}`);
+        let setDefaultValue = setDefaultLocalStorage(defaultKey, defaultValues[defaultKey]);
+        window[defaultKey] = setDefaultValue;
+        console.log(`${defaultKey}: localStorage: ${setDefaultValue}, variable: ${window[defaultKey]}`);
     }
 
     // Variables
     // timeWork, timeBreak, timeRest and endTime are declared in defaultValues above
     // ID to cancelAnimationFrame
     let rafId;
-    let continueLooping = false;
+    let fps = 5;
+    let timerFunctionArray = [timerWork, timerBreak, timerWork, timerBreak, timerWork, timerBreak, timerWork, timerBreak, timerRest];
+    let pomodoroNameArray = ["Work", "Break", "Work", "Break", "Work", "Break", "Work", "Break", "Rest"];
+    let cssIdArray = ["work1", "break1", "work2", "break2", "work3", "break3", "work4", "break4", "rest"];
 
     document.querySelector("#saveTimes").addEventListener("click", saveTimes);
     document.querySelector("#startTimer").addEventListener("click", startTimer);
-    document.querySelector("#continueLooping").addEventListener("click", setContinueLoop);
+    document.querySelector("#continueTimer").addEventListener("click", mainTimerLoop);
+
+    // Check if endTime is less than now, continue timer if it is
+    window.addEventListener("load", timerOnLoad);
+    async function timerOnLoad() {
+        timerFunctionIndex = Number.parseInt(timerFunctionIndex);
+        if (endTime > Date.now()) {
+            changeActivePomodoroCss(timerFunctionIndex);
+            await timerPromise();
+            endPomodoro();
+        } else {
+            if (timerFunctionIndex != 0) {
+                changeActivePomodoroCss(timerFunctionIndex - 1);
+                displayEndScreen(timerFunctionIndex - 1);
+            }
+        }
+    }
 
     // Start the timer, adds active timer text CSS to the first Work
     function startTimer() {
-        // Set continueLooping just in case user refreshed the page, causing checkbox status to stay but variable to change
-        setContinueLoop();
+        timerFunctionIndex = 0;
+        localStorage.setItem("timerFunctionIndex", timerFunctionIndex);
+        changeActivePomodoroCss(0);
         mainTimerLoop();
     }
 
     // Main loop, calls the timer functions
     async function mainTimerLoop() {
-        for (var i = 0; i < 4; i++) {
-            await timerWorkBreakAwait();
-            if (!continueLooping) {
-                return;
-            }
-        }
-        await timerRestAwait();
-        // Loop if loop checkbox is still checked
-        if (continueLooping) {
-            mainTimerLoop();
-        }
+        changeActivePomodoroCss(timerFunctionIndex);
+        await timerFunctionArray[timerFunctionIndex]();
+        endPomodoro();
     }
 
-    // Work and break can be put together in one function, because they both run exactly the same 4 times each loop
-    async function timerWorkBreakAwait() {
-        await timerWork();
-        // insert Change CSS
-        await timerBreak();
-        // insert Change CSS
+    function endPomodoro() {
+        displayEndScreen(timerFunctionIndex);
+        incrementTimerFunctionIndex();
+    }
+
+    function displayEndScreen(index) {
+        index = Number.parseInt(index);
+        document.querySelector("#timerText").innerHTML = `Pomodoro ${pomodoroNameArray[index]} has ended! Click Continue to move on to the next Pomodoro ${pomodoroNameArray[index + 1]}.`;
+    }
+
+    function incrementTimerFunctionIndex() {
+        timerFunctionIndex = (timerFunctionIndex + 1) % 9;
+        localStorage.setItem("timerFunctionIndex", timerFunctionIndex);
     }
 
     function timerWork() {
@@ -78,17 +97,12 @@
         return timer(timeBreak);
     }
 
-    async function timerRestAwait() {
-        await timerRest();
-    }
-
     function timerRest() {
         return timer(timeRest);
     }
 
     // Sets endTime and calls the timer function
     function timer(timeInSeconds) {
-        let fps = 5;
         endTime = Date.now() + timeInSeconds * 1000;
         localStorage.setItem("endTime", endTime);
         return timerPromise();
@@ -113,7 +127,7 @@
                     document.querySelector("#timerText").innerHTML = timerText;
 
                     // Recursive call to rAF if there is still time left
-                    if (timerInSeconds > 0) {
+                    if (timerInSeconds > 1000 / fps) {
                         rafId = requestAnimationFrame(rafCallback);
                     }
                     // If not, timer has finished. Resolve the promise to move on to the next time period
@@ -144,14 +158,21 @@
                 continue;
             }
             localStorage.setItem(timeValueKey, timeValueList[timeValueKey]);
-            global[timeValueKey] = timeValueList[timeValueKey];
-            console.log(`${timeValueKey}: ${timeValueList[timeValueKey]}`);
+            window[timeValueKey] = timeValueList[timeValueKey];
+            console.log(`${timeValueKey}: ${window[timeValueKey]}`);
         }
-        console.log(`timeWork: ${timeWork}, timeBreak: ${timeBreak}, timeRest: ${timeRest}`);
     }
 
-    function setContinueLoop() {
-        continueLooping = document.querySelector("#continueLooping").checked;
+    // Change the CSS of the current pomodoro to red text, and the rest to nothing
+    function changeActivePomodoroCss(index) {
+        // console.log(`index: ${index}. cssIdArray: ${cssIdArray}. cssIdArray[index]: ${cssIdArray[index]}`);
+        // console.log(`changeActivePomodoroCss: #${cssIdArray[index]}`);
+        document.querySelector(`#${cssIdArray[index]}`).classList.add("timerTextActive");
+        for (let i = 0; i < 9; i++) {
+            if (i != index) {
+                document.querySelector(`#${cssIdArray[i]}`).classList.remove("timerTextActive");
+            }
+        }
     }
 
-}(window));
+}());

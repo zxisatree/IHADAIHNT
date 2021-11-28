@@ -8,22 +8,25 @@
   <link href="style.css" rel="stylesheet" />
   <script src="../consoleAddNameAsPrefix.js" defer></script>
   <script src="timer.js" defer></script>
+  <script src="tabs.js" defer></script>
   <title>Timer</title>
 </head>
 
 <body>
   <button id="saveTimes">Save Pomodoro times</button>
-  <button id="startTimer">Start Pomodoro timer</button>
+  <button id="startTimer">Start Pomodoro timer from the beginning</button>
+  <button id="continueTimer">Continue pomodoro</button>
+  <p></p>
   <label for="timeWork">Work time in minutes</label>
   <input id="timeWork" value="2">
   <label for="timeBreak">Break time in minutes</label>
   <input id="timeBreak" value="3">
   <label for="timeRest">Rest time in minutes</label>
   <input id="timeRest" value="4">
-  <input type="checkbox" id="continueLooping" checked>
-  <label for="continueLooping">Continue looping?</label>
-  <p>Pomodoro timer will time the following: Work Break Work Break Work Break Work Rest, then repeat</p>
-  <p>Pomodoro timer is currently on:</p>
+  <p></p>
+  <button id="closeAndSaveTabs">Close and save tabs</button>
+  <button id="openSavedTabs">Open saved tabs</button>
+  <p id="tabList">Test</p>
   <div class="currentTimerIndicator" id="work1">Work</div>
   <div class="currentTimerIndicator" id="break1">Break</div>
   <div class="currentTimerIndicator" id="work2">Work</div>
