@@ -2,7 +2,7 @@
 (function() {
     // Add the module prefix to the console logs for debugging
     const console = consoleAddNameAsPrefix('timer', '#ff8d33');
-
+    
     // Check is key has been set before, set default value if not, always return value
     function setDefaultLocalStorage(key, value) {
         let item = localStorage.getItem(key);
@@ -132,6 +132,7 @@
                     }
                     // If not, timer has finished. Resolve the promise to move on to the next time period
                     else {
+                        new Audio("bell.wav").play()
                         resolve();
                     }
 
